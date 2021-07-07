@@ -13,7 +13,7 @@ pipeline {
                sh 'chmod +x m2/demo3/build.sh'
                withCredentials([string(credentialsId: 'an-api-key', variable: 'API_KEY')]) {
                   sh '''
-                     ./m2/demo3/build.sh
+                     ./build.sh
                   '''
                }
             }
@@ -33,14 +33,20 @@ pipeline {
    post {
       success {
          archiveArtifacts 'test-results.txt'
-         slackSend channel: '#builds',
-                   color: 'good',
-                   message: "Release ${env.RELEASE}, success: ${currentBuild.fullDisplayName}."
+         emailext subject: "Job \'${JOB_NAME}\' (build ${BUILD_NUMBER}) ${currentBuild.result}",
+                        body: "Please go to ${BUILD_URL} and verify the build", 
+                        attachLog: true, 
+                        compressLog: true, 
+                        to: "test@jenkins",
+                        recipientProviders: [upstreamDevelopers(), requestor()]
       }
       failure {
-         slackSend channel: '#builds',
-                   color: 'danger',
-                   message: "Release ${env.RELEASE}, FAILED: ${currentBuild.fullDisplayName}."
+         emailext subject: "Job \'${JOB_NAME}\' (build ${BUILD_NUMBER}) ${currentBuild.result}",
+                        body: "Please go to ${BUILD_URL} and verify the build", 
+                        attachLog: true, 
+                        compressLog: true, 
+                        to: "test@jenkins",
+                        recipientProviders: [upstreamDevelopers(), requestor()]
       }
    }
 }
