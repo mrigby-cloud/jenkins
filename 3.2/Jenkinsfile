@@ -34,13 +34,13 @@ pipeline {
               echo "Smoke testing version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
             }
         }
-        // stage('Publish') {
-        //     when {
-        //         expression { return params.RC }
-        //     } 
-        //     steps {
-        //         echo "Publishing VersionPrefix ${VERSION} --version-suffix ${VERSION_RC}" 
-        //     }
-        // }
+        stage('Publish') {
+            when {
+                expression { return params.RC }
+            } 
+            steps {
+                echo "Publishing VersionPrefix ${VERSION} --version-suffix ${VERSION_RC}" 
+            }
+        }
     }
 }
