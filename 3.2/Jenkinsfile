@@ -25,11 +25,17 @@ pipeline {
             }
         }
         stage('Unit Test') {
+            environment {
+                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
+            }
             steps {
               echo "Unit testing version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
             }
         }
         stage('Smoke Test') {
+            environment {
+                VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
+            }
             steps {
               echo "Smoke testing version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
             }
